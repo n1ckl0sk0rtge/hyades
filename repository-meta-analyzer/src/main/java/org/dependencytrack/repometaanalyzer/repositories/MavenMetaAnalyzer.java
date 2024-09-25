@@ -49,7 +49,7 @@ import java.io.InputStream;
  * @author Steve Springett
  * @since 3.1.0
  */
-public class MavenMetaAnalyzer extends AbstractMetaAnalyzer {
+public class MavenMetaAnalyzer extends DepsDevMetaAnalyzer {
     private static final Logger LOGGER = LoggerFactory.getLogger(MavenMetaAnalyzer.class);
     private static final String DEFAULT_BASE_URL = "https://repo1.maven.org/maven2";
     private static final String REPO_METADATA_URL = "/%s/maven-metadata.xml";
@@ -77,7 +77,7 @@ public class MavenMetaAnalyzer extends AbstractMetaAnalyzer {
      * {@inheritDoc}
      */
     public MetaModel analyze(final Component component) {
-        final MetaModel meta = new MetaModel(component);
+        final MetaModel meta = super.analyze(component);
         if (component.getPurl() != null) {
             final String mavenGavUrl = component.getPurl().getNamespace().replaceAll("\\.", "/") + "/" + component.getPurl().getName();
             final String url = String.format(baseUrl + REPO_METADATA_URL, mavenGavUrl);

@@ -47,8 +47,10 @@ public class DepsDevMetaAnalyzer extends AbstractMetaAnalyzer {
     private static final String API_URL = "/purl/%s";
     private static final String SOURCE_REPO = "SOURCE_REPO";
 
-    DepsDevMetaAnalyzer() {
-        this.baseUrl = DEFAULT_BASE_URL;
+    private String depsDevBaseUrl = DEFAULT_BASE_URL;
+
+    public void setDepsDevBaseUrl(String depsDevBaseUrl) {
+        this.depsDevBaseUrl = depsDevBaseUrl;
     }
 
     @Override
@@ -60,7 +62,7 @@ public class DepsDevMetaAnalyzer extends AbstractMetaAnalyzer {
      * {@inheritDoc}
      */
     public RepositoryType supportedRepositoryType() {
-        return null; // Supported values for type are cargo, golang, maven, npm, nuget and pypi. 
+        return null; // not supposed to be registered
     }
 
     /**
@@ -73,7 +75,7 @@ public class DepsDevMetaAnalyzer extends AbstractMetaAnalyzer {
             PackageURL coords = PurlUtil.silentPurlCoordinatesOnly(purl);
             if (coords != null) {
                 String encodedCoords = URLEncoder.encode(coords.canonicalize(), StandardCharsets.UTF_8);
-                final String url = String.format(baseUrl + API_URL, encodedCoords);
+                final String url = String.format(depsDevBaseUrl + API_URL, encodedCoords);
                 try (final CloseableHttpResponse response = processHttpRequest(url)) {
                     if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK &&
                         response.getEntity() != null) {

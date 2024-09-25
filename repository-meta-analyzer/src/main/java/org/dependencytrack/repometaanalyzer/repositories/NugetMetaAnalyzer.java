@@ -43,7 +43,7 @@ import java.util.Date;
  * @author Steve Springett
  * @since 3.4.0
  */
-public class NugetMetaAnalyzer extends AbstractMetaAnalyzer {
+public class NugetMetaAnalyzer extends DepsDevMetaAnalyzer {
 
     public static final DateFormat[] SUPPORTED_DATE_FORMATS = new DateFormat[]{
             new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"),
@@ -97,7 +97,7 @@ public class NugetMetaAnalyzer extends AbstractMetaAnalyzer {
      * {@inheritDoc}
      */
     public MetaModel analyze(final Component component) {
-        final var meta = new MetaModel(component);
+        final var meta = super.analyze(component);
         if (component.getPurl() != null && performVersionCheck(meta, component)) {
             performLastPublishedCheck(meta, component);
         }

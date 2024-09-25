@@ -43,7 +43,7 @@ import java.io.IOException;
  * @since 4.1.0
  */
 
-public class CargoMetaAnalyzer extends AbstractMetaAnalyzer {
+public class CargoMetaAnalyzer extends DepsDevMetaAnalyzer {
     private static final Logger LOGGER = LoggerFactory.getLogger(CargoMetaAnalyzer.class);
     private static final String DEFAULT_BASE_URL = "https://crates.io";
     private static final String API_URL = "/api/v1/crates/%s";
@@ -70,7 +70,7 @@ public class CargoMetaAnalyzer extends AbstractMetaAnalyzer {
      * {@inheritDoc}
      */
     public MetaModel analyze(final Component component) {
-        final MetaModel meta = new MetaModel(component);
+        final MetaModel meta = super.analyze(component);
         if (component.getPurl() != null) {
             final String url = String.format(baseUrl + API_URL, component.getPurl().getName());
             try (final CloseableHttpResponse response = processHttpRequest(url)) {

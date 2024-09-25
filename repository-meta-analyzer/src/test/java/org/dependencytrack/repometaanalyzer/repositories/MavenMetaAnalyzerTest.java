@@ -27,6 +27,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.dependencytrack.persistence.model.Component;
 import org.dependencytrack.persistence.model.RepositoryType;
 import org.dependencytrack.repometaanalyzer.model.MetaModel;
+import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -63,7 +64,7 @@ class MavenMetaAnalyzerTest {
         component.setPurl(new PackageURL("pkg:maven/junit/junit@4.12"));
         Assertions.assertEquals("MavenMetaAnalyzer", analyzer.getName());
         Assertions.assertTrue(analyzer.isApplicable(component));
-        Assertions.assertEquals(RepositoryType.MAVEN, analyzer.supportedRepositoryType());
+        Assert.assertEquals(RepositoryType.MAVEN, analyzer.supportedRepositoryType());
         MetaModel metaModel = analyzer.analyze(component);
         Assertions.assertNotNull(metaModel.getLatestVersion());
         Assertions.assertNotNull(metaModel.getPublishedTimestamp());
@@ -77,7 +78,7 @@ class MavenMetaAnalyzerTest {
         // the Scala compiler they were built with.
         component.setPurl(new PackageURL("pkg:maven/com.typesafe.akka/akka-actor_2.13@2.5.23"));
         Assertions.assertTrue(analyzer.isApplicable(component));
-        Assertions.assertEquals(RepositoryType.MAVEN, analyzer.supportedRepositoryType());
+        Assert.assertEquals(RepositoryType.MAVEN, analyzer.supportedRepositoryType());
         MetaModel metaModel = analyzer.analyze(component);
         Assertions.assertNotNull(metaModel.getLatestVersion());
         Assertions.assertNotNull(metaModel.getPublishedTimestamp());
@@ -155,6 +156,28 @@ class MavenMetaAnalyzerTest {
         Assertions.assertEquals("sha256hash", integrityMeta.getSha256());
         Assertions.assertEquals("sha512hash", integrityMeta.getSha512());
         Assertions.assertNotNull(integrityMeta.getCurrentVersionLastModified());
+    }
+
+    @Test
+    void testRepoFound() {
+        Component component = new Component();
+        component.setPurl("pkg:maven/com.googlecode.owasp-java-html-sanitizer/java10-shim@20240325.1");
+
+        Assert.assertTrue(analyzer.isApplicable(component));
+        Assert.assertEquals(RepositoryType.MAVEN, analyzer.supportedRepositoryType());
+        MetaModel metaModel = analyzer.analyze(component);
+        Assert.assertEquals("https://github.com/OWASP/java-html-sanitizer", metaModel.getSourceRepository());
+    }
+
+    @Test
+    void testRepoNotFound() {
+        Component component = new Component();
+        component.setPurl("pkg:maven/org.apache.httpcomponents/httpclient@4.5.14");
+
+        Assert.assertTrue(analyzer.isApplicable(component));
+        Assert.assertEquals(RepositoryType.MAVEN, analyzer.supportedRepositoryType());
+        MetaModel metaModel = analyzer.analyze(component);
+        Assert.assertNull(metaModel.getSourceRepository());
     }
 }
 

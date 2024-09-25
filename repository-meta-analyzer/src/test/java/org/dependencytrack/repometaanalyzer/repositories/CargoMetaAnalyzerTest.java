@@ -20,19 +20,30 @@
 package org.dependencytrack.repometaanalyzer.repositories;
 
 import com.github.packageurl.PackageURL;
+
+import org.apache.http.impl.client.HttpClients;
 import org.dependencytrack.persistence.model.Component;
 import org.dependencytrack.persistence.model.RepositoryType;
 import org.dependencytrack.repometaanalyzer.model.MetaModel;
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 
 public class CargoMetaAnalyzerTest {
+
+    private IMetaAnalyzer analyzer;
+
+    @BeforeEach
+    void beforeEach() {
+        analyzer = new CargoMetaAnalyzer();
+        analyzer.setHttpClient(HttpClients.createDefault());
+    }
+
     @Test
-    public void testAnalyzer() throws Exception {
+    public void testAnalyzerX() throws Exception {
         Component component = new Component();
         component.setPurl(new PackageURL("pkg:cargo/rand@0.7.2"));
 
-        CargoMetaAnalyzer analyzer = new CargoMetaAnalyzer();
         Assert.assertTrue(analyzer.isApplicable(component));
         Assert.assertEquals(RepositoryType.CARGO, analyzer.supportedRepositoryType());
         MetaModel metaModel = analyzer.analyze(component);
