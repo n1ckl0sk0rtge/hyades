@@ -42,7 +42,7 @@ import java.util.TimeZone;
  * An IMetaAnalyzer implementation that supports Golang.
  * @since 4.3.0
  */
-public class GoModulesMetaAnalyzer extends AbstractMetaAnalyzer {
+public class GoModulesMetaAnalyzer extends DepsDevMetaAnalyzer {
     private static final Logger LOGGER = LoggerFactory.getLogger(GoModulesMetaAnalyzer.class);
     private static final String DEFAULT_BASE_URL = "https://proxy.golang.org";
     private static final String API_URL = "/%s/%s/@latest";
@@ -63,7 +63,7 @@ public class GoModulesMetaAnalyzer extends AbstractMetaAnalyzer {
 
     @Override
     public MetaModel analyze(final Component component) {
-        final var meta = new MetaModel(component);
+        final var meta = super.analyze(component);
         var successMeta = new MetaModel(component);
 
         if (component.getPurl() == null || component.getPurl().getNamespace() == null) {

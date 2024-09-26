@@ -43,7 +43,7 @@ import java.util.Date;
  * @author Steve Springett
  * @since 3.4.0
  */
-public class PypiMetaAnalyzer extends AbstractMetaAnalyzer {
+public class PypiMetaAnalyzer extends DepsDevMetaAnalyzer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PypiMetaAnalyzer.class);
     private static final String DEFAULT_BASE_URL = "https://pypi.org";
@@ -71,7 +71,7 @@ public class PypiMetaAnalyzer extends AbstractMetaAnalyzer {
      * {@inheritDoc}
      */
     public MetaModel analyze(final Component component) {
-        final MetaModel meta = new MetaModel(component);
+        final MetaModel meta = super.analyze(component);
         MetaModel successMeta = new MetaModel(component);
         if (component.getPurl() != null) {
             final String url = String.format(baseUrl + API_URL, component.getPurl().getName());

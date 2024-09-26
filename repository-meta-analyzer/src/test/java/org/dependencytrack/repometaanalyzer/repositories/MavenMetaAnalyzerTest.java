@@ -156,5 +156,27 @@ class MavenMetaAnalyzerTest {
         Assertions.assertEquals("sha512hash", integrityMeta.getSha512());
         Assertions.assertNotNull(integrityMeta.getCurrentVersionLastModified());
     }
+
+    @Test
+    void testRepoFound() {
+        Component component = new Component();
+        component.setPurl("pkg:maven/com.googlecode.owasp-java-html-sanitizer/java10-shim@20240325.1");
+
+        Assertions.assertTrue(analyzer.isApplicable(component));
+        Assertions.assertEquals(RepositoryType.MAVEN, analyzer.supportedRepositoryType());
+        MetaModel metaModel = analyzer.analyze(component);
+        Assertions.assertEquals("https://github.com/OWASP/java-html-sanitizer", metaModel.getSourceRepository());
+    }
+
+    @Test
+    void testRepoNotFound() {
+        Component component = new Component();
+        component.setPurl("pkg:maven/org.apache.httpcomponents/httpclient@4.5.14");
+
+        Assertions.assertTrue(analyzer.isApplicable(component));
+        Assertions.assertEquals(RepositoryType.MAVEN, analyzer.supportedRepositoryType());
+        MetaModel metaModel = analyzer.analyze(component);
+        Assertions.assertNull(metaModel.getSourceRepository());
+    }
 }
 

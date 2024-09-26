@@ -38,7 +38,7 @@ import java.io.IOException;
  * @author Steve Springett
  * @since 3.1.0
  */
-public class NpmMetaAnalyzer extends AbstractMetaAnalyzer {
+public class NpmMetaAnalyzer extends DepsDevMetaAnalyzer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NpmMetaAnalyzer.class);
     private static final String DEFAULT_BASE_URL = "https://registry.npmjs.org";
@@ -66,7 +66,7 @@ public class NpmMetaAnalyzer extends AbstractMetaAnalyzer {
      * {@inheritDoc}
      */
     public MetaModel analyze(final Component component) {
-        final MetaModel meta = new MetaModel(component);
+        final MetaModel meta = super.analyze(component);
         if (component.getPurl() != null) {
 
             final String packageName;
